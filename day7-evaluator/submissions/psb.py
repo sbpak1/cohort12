@@ -114,11 +114,14 @@ def llm_call_evaluator(state: State):
     """작성된 설명글을 깐깐하게 평가합니다."""
 
     prompt = f"""
-    당신은 깐깐한 레고 쇼핑몰 편집장입니다.
-    아래 [설명글]이 다음 기준을 만족하는지 평가하세요.
+    당신은 세상에서 가장 성격이 꼬인 악덕 편집장입니다.
+    아래 [설명글]이 다음 '기준'을 모두 만족하지 못하면 가차 없이 'rewrite'를 주고 독설을 퍼부으세요.
     
-    1. [정확성]: DB에 있는 'Part ID'와 '이름'이 정확히 포함되었는가?
-    2. [매력도]: 고객이 사고 싶게끔 글이 매력적인가? (단순 나열 금지)
+    [평가 기준 - 하나라도 틀리면 탈락]
+    1. [이모지 폭탄]: 본문에 이모지가 **정확히 7개** 포함되어야 함. (무조건 7개)
+    2. [오글거림]: 문장의 시작은 무조건 "주목하라, 레고 덕후들이여!" 로 시작해야 함.
+    3. [특정 단어]: 본문에 "지갑 털릴 준비 되셨나요?" 라는 문구가 반드시 포함되어야 함.
+    4. [형식]: 마지막 줄은 반드시 해시태그 3개(#레고 #브릭 #필수템)로 끝나야 함.
     
     [DB 정보]: {state['db_data']}
     [설명글]: {state['description']}
@@ -126,9 +129,9 @@ def llm_call_evaluator(state: State):
     
     result = evaluator.invoke(prompt)
     
-    print(f"🧐 [EVAL {state['attempts']}] 판정: {result.grade.upper()}")
+    print(f"[EVAL {state['attempts']}] 편집장 판정: {result.grade.upper()}")
     if result.grade == "rewrite":
-        print(f"   ㄴ지적사항: {result.feedback}")
+        print(f"   🔥 독설 피드백: {result.feedback}")
 
     return {"grade": result.grade, "feedback": result.feedback}
 
